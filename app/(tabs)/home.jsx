@@ -1,16 +1,26 @@
-import { View, Text, FlatList, Image } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList, Image, RefreshControl } from 'react-native'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
+
 import { images } from '../../constants'
 import SearchInput from '../../components/SearchInput'
 import Trending from '../../components/Trending'
+import EmptyState from '../../components/EmptyState'
 
 const Home = () => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    // Re call videos -> see if new videos appeare
+    setRefreshing(false);
+  }
+
   return (
-    <SafeAreaView className="bg-primary">
+    <SafeAreaView className="bg-primary h-full">
       <FlatList 
-        data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
+      data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <Text className="text-3xl text-white">{item.id}</Text>
@@ -38,7 +48,7 @@ const Home = () => {
 
             <SearchInput />
 
-            <View className="flex-1 pt-5 pb-8 w-full">
+            <View className="flex-1 pt-4 pb-2 w-full">
               <Text className="mb-3 font-pregular text-gray-100 text-lg">
                 Latest Videos
               </Text>
@@ -47,6 +57,17 @@ const Home = () => {
             </View>
           </View>
         )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="No Videos Found"
+            subtitle="Be the first one to upload a video"
+          />
+        )}
+        refreshControl= {
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />}
       />
 
       <StatusBar backgroundColor="#161622" style='light' />
