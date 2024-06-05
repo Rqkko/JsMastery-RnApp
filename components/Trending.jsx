@@ -49,7 +49,6 @@ const TrendingItem = ({ activeItem, item }) => {
           source={{ uri: item.video }}
           className="bg-white/10 mt-3 rounded-[35px] w-52 h-72"
           allowsInlineMediaPlayback
-          resizeMode="contain"
         />
             ) : (
         <TouchableOpacity
