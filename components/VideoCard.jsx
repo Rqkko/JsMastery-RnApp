@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { icons } from '../constants'
+import WebView from 'react-native-webview';
 
 const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avatar } }}) => {
   const [play, setPlay] = useState(false);
@@ -44,7 +45,14 @@ const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avat
       </View>
 
       {play ? (
+        <>
+        <WebView 
+        source={{ uri: video }}
+        className="mt-3 rounded-xl w-full h-60"
+        allowsInlineMediaPlayback
+        />
         <Text className="text-white">Playing</Text>
+        </>
       ) : (
         <TouchableOpacity
           className="relative justify-center items-center mt-3 rounded-xl w-full h-60"
