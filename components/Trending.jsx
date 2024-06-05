@@ -3,6 +3,7 @@ import { View, Text, FlatList, ImageBackground, TouchableOpacity, Image } from '
 import * as Animatable from 'react-native-animatable';
 import { icons } from '../constants';
 import { Video, ResizeMode } from 'expo-av';
+import WebView from 'react-native-webview';
 
 const zoomIn = {
   0: {
@@ -27,27 +28,30 @@ const TrendingItem = ({ activeItem, item }) => {
 
   return (
     <Animatable.View
-      className="mr-5"
+      className="mr-3 ml-3"
       animation={activeItem === item.$id ? zoomIn : zoomOut}
       duration={500}
     >
       {play ? (
-        <>
-        <Video
+        // <Video
+        //   source={{ uri: `${item.video}.mp4` }}
+        //   className="bg-white/10 mt-3 rounded-[35px] w-52 h-72"
+        //   resizeMode={ResizeMode.CONTAIN}
+        //   useNativeControls
+        //   shouldPlay
+        //   onPlaybackStatusUpdate={(status) => {
+        //     if (status.didJustFinish) {
+        //       setPlay(false);
+        //     }
+        //   }}
+        // />
+        <WebView 
           source={{ uri: item.video }}
           className="bg-white/10 mt-3 rounded-[35px] w-52 h-72"
-          resizeMode={ResizeMode.CONTAIN}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinish) {
-              setPlay(false);
-            }
-          }}
+          allowsInlineMediaPlayback
+          resizeMode="contain"
         />
-        <Text className="text-white">PLAYING</Text>
-        </>
-      ) : (
+            ) : (
         <TouchableOpacity
           className="relative justify-center items-center"
           activeOpacity={0.7}
@@ -87,12 +91,10 @@ const Trending = ({ posts }) => {
       data={posts}
       keyExtractor={(item) => item.$id}
       renderItem={({ item }) => (
-        <>
-          <TrendingItem 
-            activeItem={activeItem}
-            item={item}
-          />
-        </>
+        <TrendingItem 
+          activeItem={activeItem}
+          item={item}
+        />
       )}
       onViewableItemsChanged={viewableItemsChanged}
       viewabilityConfig={{
