@@ -3,12 +3,18 @@ import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ResizeMode, Video } from 'expo-av'
 import * as DocumentPicker from 'expo-document-picker'
+import * as ImagePicker from 'expo-image-picker'
 
 import FormField from '../../components/FormField'
 import { icons } from '../../constants'
 import CustomButton from '../../components/CustomButton'
+import { createVideo } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/GlobalProvider'
+import { router } from 'expo-router'
 
 const Create = () => {
+  const { user } = useGlobalContext();
+
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     title: '',
@@ -18,10 +24,10 @@ const Create = () => {
   })
 
   const openPicker = async (selectType) => {
-    const result = await DocumentPicker.getDocumentAsync({
-      type: selectType === 'image'
-        ? ['image/png', 'image/jpg']
-        : ['video/mp4', 'video/gif']
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: selectType === 'image' ? ImagePicker.MediaTypeOptions.Images : ImagePicker.MediaTypeOptions.Videos,
+      aspect: [4,3],
+      quality: 1,
     })
 
     if (!result.canceled) {
@@ -32,15 +38,35 @@ const Create = () => {
       if (selectType==='video') {
         setForm({ ...form, video: result.assets[0] })
       }
-    } else {
-      setTimeout(() => {
-        Alert.alert('Document picked', JSON.stringify(result, null, 2));
-      }, 100);
     }
   }
 
-  const submit = () => {
+  const submit = async () => {
+    if (!form.prompt || !form.title || !form.thumbnail || !form.video) {
+      return Alert.alert('Please fill in all the fields')
+    }
 
+    setUploading(true);
+
+    try {
+      await createVideo({
+        ...form, userId: user.$id
+      });
+
+      Alert.alert('Success', 'Post uploaded successfully')
+      router.push('/home');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setForm({
+        title: '',
+        video: null,
+        thumbnail: null,
+        prompt: ''
+      })
+
+      setUploading(false);
+    }
   }
 
   return (
@@ -68,9 +94,7 @@ const Create = () => {
               <Video 
                 source={{ uri: form.video.uri }}
                 className="rounded-2xl w-full h-64"
-                useNativeControls
                 resizeMode={ResizeMode.COVER}
-                isLooping
               />
             ) : (
               <View className="justify-center items-center bg-black-100 px-4 rounded-2xl w-full h-40">
