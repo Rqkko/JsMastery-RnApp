@@ -47,11 +47,11 @@ const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avat
       {play ? (
         <>
         <WebView 
-        source={{ uri: video }}
-        className="mt-3 rounded-xl w-full h-60"
-        allowsInlineMediaPlayback
+          source={{ uri: video }}
+          className="mt-3 rounded-xl w-full h-60"
+          allowsInlineMediaPlayback
         />
-        <Text className="text-white">Playing</Text>
+        <Text className="text-white">{`Playing: ${video}`}</Text>
         </>
       ) : (
         <TouchableOpacity
