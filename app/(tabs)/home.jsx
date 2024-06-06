@@ -10,6 +10,7 @@ import EmptyState from '../../components/EmptyState'
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
 import useAppwrite from '../../lib/useAppwrite'
 import VideoCard from '../../components/VideoCard'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 const Home = () => {
   // Rename "data" to "posts"
@@ -18,9 +19,11 @@ const Home = () => {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  const { user, setUser, setIsLoggedIn } = useGlobalContext();
+
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
+    refetch();
     setRefreshing(false);
   }
 
@@ -41,10 +44,10 @@ const Home = () => {
             <View className="flex-row justify-between items-start mb-6">
               <View>
                 <Text className="font-pmedium text-gray-100 text-sm">
-                  Welcome Back
+                  Welcome Back,
                 </Text>
                 <Text className="font-psemibold text-2xl text-white">
-                  JSMastery
+                  {user?.username}
                 </Text>
               </View>
               
@@ -59,13 +62,15 @@ const Home = () => {
 
             <SearchInput />
 
-            <View className="flex-1 pt-4 pb-2 w-full">
+            <View className="pt-4 pb-2 w-full">
               <Text className="mb-3 font-pregular text-gray-100 text-lg">
                 Latest Videos
               </Text>
 
               <Trending posts={latestPosts ?? []} />
+
             </View>
+
           </View>
         )}
         ListEmptyComponent={() => (
