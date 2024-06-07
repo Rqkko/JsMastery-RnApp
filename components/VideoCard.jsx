@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { icons } from '../constants'
 import WebView from 'react-native-webview';
@@ -6,6 +6,10 @@ import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-m
 
 const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avatar } }}) => {
   const [play, setPlay] = useState(false);
+
+  function handleMenuSelect(value) {
+    Alert.alert("Menu Option Selected", `Selected option: ${value}`);
+  }
 
   return (
     <View className="flex-col items-center mb-14 px-4">
@@ -36,22 +40,38 @@ const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avat
           </View>
         </View>
         
-        <Menu onSelect={value => alert(`Selected number: ${value}`)}>
-          <MenuTrigger 
-            children={
-              <Image 
-              source={icons.menu}
-              className="w-5 h-5"
-              resizeMode='contain'
-              />
-            }
-          />
-          <MenuOptions>
-            <MenuOption value={1} text='One' />
-            <MenuOption value={2}>
-              <Text style={{color: 'red'}}>Two</Text>
+        <Menu onSelect={handleMenuSelect}>
+          <MenuTrigger>
+            <Image
+                source={icons.menu}
+                className="w-5 h-5"
+                resizeMode='contain'
+                />
+          </MenuTrigger>
+
+          <MenuOptions
+            optionsContainerStyle={{ backgroundColor: "#1E1E2D", marginTop: 30, width:"30%" }}
+          >
+            <MenuOption value={"bookmark"}>
+              <View className="flex-row items-center">
+                <Image 
+                  source={icons.bookmark}
+                  className="mr-2 ml-1 w-5 h-5"
+                  resizeMode='contain'
+                />
+                <Text className="mr-2 font-pregular text-gray-100">Bookmark</Text>
+              </View>
             </MenuOption>
-            <MenuOption value={3} disabled={true} text='Three' />
+            <MenuOption value={"delete"}>
+              <View className="flex-row items-center">
+                <Image 
+                  source={icons.eyeHide}
+                  className="mr-2 ml-1 w-5 h-5"
+                  resizeMode='contain'
+                />
+                <Text className="mr-2 font-pregular text-gray-100">Delete</Text>
+              </View>
+            </MenuOption>
           </MenuOptions>
         </Menu>
       </View>
@@ -86,5 +106,15 @@ const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avat
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  menuView: {
+    alignItems: "center"
+  },
+
+  menuText: {
+    color: "#CDCDE0"
+  }
+})
 
 export default VideoCard
