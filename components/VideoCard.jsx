@@ -2,6 +2,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { icons } from '../constants'
 import WebView from 'react-native-webview';
+import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 
 const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avatar } }}) => {
   const [play, setPlay] = useState(false);
@@ -35,13 +36,24 @@ const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avat
           </View>
         </View>
         
-        <View className="pt-2">
-          <Image 
-            source={icons.menu}
-            className="w-5 h-5"
-            resizeMode='contain'
+        <Menu onSelect={value => alert(`Selected number: ${value}`)}>
+          <MenuTrigger 
+            children={
+              <Image 
+              source={icons.menu}
+              className="w-5 h-5"
+              resizeMode='contain'
+              />
+            }
           />
-        </View>
+          <MenuOptions>
+            <MenuOption value={1} text='One' />
+            <MenuOption value={2}>
+              <Text style={{color: 'red'}}>Two</Text>
+            </MenuOption>
+            <MenuOption value={3} disabled={true} text='Three' />
+          </MenuOptions>
+        </Menu>
       </View>
 
       {play ? (
