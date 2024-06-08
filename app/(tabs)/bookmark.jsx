@@ -16,7 +16,6 @@ const Bookmark = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   async function onRefresh() {
-    console.log(user);
     setRefreshing(true);
     refetch();
     setRefreshing(false);

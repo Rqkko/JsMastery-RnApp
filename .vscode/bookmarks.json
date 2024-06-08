@@ -1,0 +1,24 @@
+{
+	"files": [
+		{
+			"path": "components/VideoCard.jsx",
+			"bookmarks": [
+				{
+					"line": 30,
+					"column": 0,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "lib/appwrite.js",
+			"bookmarks": [
+				{
+					"line": 282,
+					"column": 0,
+					"label": ""
+				}
+			]
+		}
+	]
+}

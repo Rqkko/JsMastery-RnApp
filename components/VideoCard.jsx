@@ -1,22 +1,36 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { icons } from '../constants'
 import WebView from 'react-native-webview';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 import { bookmark, getCurrentUser, updateUser } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
 
-const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, avatar } }}) => {
+const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, avatar }, usersBookmarked } }) => {
   const [play, setPlay] = useState(false);
-  const { setUser } = useGlobalContext();
+  const { user, setUser } = useGlobalContext();
+  const [isBookmarked, setIsBookmarked] = useState(false)
+
+  useEffect(() => {
+    console.log(usersBookmarked);
+    if (user.bookmarkedVideos.some(video => video.$id === $id)) {
+      setIsBookmarked(true);
+    }
+  }, [])
+  
 
   async function handleMenuSelect(value) {
     try {
       if (value=="bookmark") {
-        await bookmark($id, title);
-        console.log("Updating...")
-        await updateUser(setUser);
-        Alert.alert("Video Bookmarked!");
+        if (!isBookmarked) {
+          await bookmark($id, title);
+          await updateUser(setUser);
+          setIsBookmarked(true);
+          Alert.alert("Video Bookmarked!");
+        } else {
+          // TODO: Make unbookmarking
+          Alert.alert("Unbookmarking");
+        }
 
       } else if (value=="delete") {
         Alert.alert("Deleting", "Deleting this video")
@@ -27,8 +41,6 @@ const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, a
     } catch (error) {
       Alert.alert("Error", error.message);
     }
-
-    
   }
 
   return (
@@ -79,7 +91,10 @@ const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, a
                   className="mr-2 ml-1 w-5 h-5"
                   resizeMode='contain'
                 />
-                <Text className="mr-2 font-pregular text-gray-100">Bookmark</Text>
+                {isBookmarked
+                  ? <Text className="mr-2 font-pregular text-gray-100">UnBookmark</Text>
+                  : <Text className="mr-2 font-pregular text-gray-100">Bookmark</Text>}
+                
               </View>
             </MenuOption>
             <MenuOption value={"delete"}>
