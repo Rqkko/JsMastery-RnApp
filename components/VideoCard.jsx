@@ -9,11 +9,14 @@ import { useGlobalContext } from '../context/GlobalProvider';
 
 const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, avatar } }}) => {
   const [play, setPlay] = useState(false);
+  const { setUser } = useGlobalContext();
 
   async function handleMenuSelect(value) {
     try {
       if (value=="bookmark") {
         await bookmark($id, title);
+        const updatedUser = await getCurrentUser();
+        setUser(updatedUser);
         Alert.alert("Video Bookmarked!");
 
       } else if (value=="delete") {
