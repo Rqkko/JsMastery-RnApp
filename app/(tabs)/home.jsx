@@ -35,7 +35,7 @@ const Home = () => {
         renderItem={({ item }) => (
           <>
             <VideoCard 
-              video = {item}
+              vid = {item}
             /> 
           </>
         )}

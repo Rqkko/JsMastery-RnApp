@@ -3,12 +3,30 @@ import React, { useState } from 'react'
 import { icons } from '../constants'
 import WebView from 'react-native-webview';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
+import useAppwrite from '../lib/useAppwrite';
+import { bookmark } from '../lib/appwrite';
 
-const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avatar } }}) => {
+const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, avatar } }}) => {
   const [play, setPlay] = useState(false);
 
-  function handleMenuSelect(value) {
-    Alert.alert("Menu Option Selected", `Selected option: ${value}`);
+  async function handleMenuSelect(value) {
+    try {
+      if (value=="bookmark") {
+        console.log("The videoId: " + $id);
+        await bookmark($id, title);
+        Alert.alert("Video Bookmarked!");
+
+      } else if (value=="delete") {
+        Alert.alert("Deleting", "Deleting this video")
+
+      } else {
+        throw Error("Invalid Option");
+      }
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
+
+    
   }
 
   return (

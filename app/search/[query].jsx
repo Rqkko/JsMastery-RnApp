@@ -25,7 +25,7 @@ const Search = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <VideoCard 
-            video = {item}
+            vid = {item}
           /> 
         )}
         ListHeaderComponent={() => (
