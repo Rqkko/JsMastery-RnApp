@@ -12,7 +12,6 @@ const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, a
   async function handleMenuSelect(value) {
     try {
       if (value=="bookmark") {
-        console.log("The videoId: " + $id);
         await bookmark($id, title);
         Alert.alert("Video Bookmarked!");
 
