@@ -4,7 +4,8 @@ import { icons } from '../constants'
 import WebView from 'react-native-webview';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 import useAppwrite from '../lib/useAppwrite';
-import { bookmark } from '../lib/appwrite';
+import { bookmark, getCurrentUser } from '../lib/appwrite';
+import { useGlobalContext } from '../context/GlobalProvider';
 
 const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, avatar } }}) => {
   const [play, setPlay] = useState(false);

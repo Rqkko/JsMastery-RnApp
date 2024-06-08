@@ -12,32 +12,13 @@ import VideoCard from '../../components/VideoCard'
 
 const Bookmark = () => {
   const { user } = useGlobalContext();
-  const [posts, setPosts] = useState([])
-
-  useEffect(() => {
-    getBookmarkedPosts(user);
-  }, [])
-
-  async function getBookmarkedPosts(user) {
-    try {
-      let tempPosts = []
-      for (let i = 0; i < user.bookmarkedVideos.length; i++) {
-        console.log(`i: ${i}, postId: ${user.bookmarkedVideos[i].$id}`);
-        const tempPost = await getPostWithId(user.bookmarkedVideos[i].$id)
-        console.log("TMP POST: " + tempPost.$id);
-        tempPosts.push(tempPost)
-      }
-      console.log(tempPosts);
-
-      setPosts(tempPosts);
-
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  }
+  const { data: posts, refetch } = useAppwrite(getBookmarks = () => getBookmarkedPosts(user));
+  const [refreshing, setRefreshing] = useState(false);
 
   async function onRefresh() {
-    await getBookmarkedPosts(user);
+    setRefreshing(true);
+    refetch();
+    setRefreshing(false);
   }
 
   return (
@@ -65,7 +46,7 @@ const Bookmark = () => {
           )}
           refreshControl= {
             <RefreshControl
-              // refreshing={}
+              refreshing={refreshing}
               onRefresh={onRefresh}
             />
           }
