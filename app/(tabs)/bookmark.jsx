@@ -1,12 +1,44 @@
-import { View, Text, FlatList, RefreshControl } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList, RefreshControl, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
 import SearchInput from '../../components/SearchInput'
 import SearchBookmark from '../../components/SearchBookmark'
+import useAppwrite from '../../lib/useAppwrite'
+import { getBookmarkedPosts, getPostWithId } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/GlobalProvider'
+import EmptyState from '../../components/EmptyState'
+import VideoCard from '../../components/VideoCard'
 
 const Bookmark = () => {
-  const posts = [ { $id: 1 }, { $id: 2 }, { $id: 3 }, { $id: 4 }, ];
+  const { user } = useGlobalContext();
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    getBookmarkedPosts(user);
+  }, [])
+
+  async function getBookmarkedPosts(user) {
+    try {
+      let tempPosts = []
+      for (let i = 0; i < user.bookmarkedVideos.length; i++) {
+        console.log(`i: ${i}, postId: ${user.bookmarkedVideos[i].$id}`);
+        const tempPost = await getPostWithId(user.bookmarkedVideos[i].$id)
+        console.log("TMP POST: " + tempPost.$id);
+        tempPosts.push(tempPost)
+      }
+      console.log(tempPosts);
+
+      setPosts(tempPosts);
+
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
+  }
+
+  async function onRefresh() {
+    await getBookmarkedPosts(user);
+  }
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -21,14 +53,9 @@ const Bookmark = () => {
           data={posts}
           keyExtractor={(item) => item.$id}
           renderItem={({ item }) => (
-            <Text className="text-4xl text-white">
-              {item.$id}
-            </Text>
-          // <>
-          //   <VideoCard 
-          //     video = {item}
-          //   /> 
-          // </>
+            <VideoCard 
+              vid = {item}
+            /> 
           )}
           ListEmptyComponent={() => (
             <EmptyState
@@ -36,12 +63,12 @@ const Bookmark = () => {
               subtitle="Be the first one to upload a video"
             />
           )}
-          // refreshControl= {
-          //   <RefreshControl
-          //     refreshing={refreshing}
-          //     onRefresh={onRefresh}
-          //   />
-          // }
+          refreshControl= {
+            <RefreshControl
+              // refreshing={}
+              onRefresh={onRefresh}
+            />
+          }
         />
       </View>
     </SafeAreaView>
