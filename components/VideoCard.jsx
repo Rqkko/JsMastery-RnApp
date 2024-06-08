@@ -3,8 +3,7 @@ import React, { useState } from 'react'
 import { icons } from '../constants'
 import WebView from 'react-native-webview';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
-import useAppwrite from '../lib/useAppwrite';
-import { bookmark, getCurrentUser } from '../lib/appwrite';
+import { bookmark, getCurrentUser, updateUser } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
 
 const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, avatar } }}) => {
@@ -15,8 +14,8 @@ const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, a
     try {
       if (value=="bookmark") {
         await bookmark($id, title);
-        const updatedUser = await getCurrentUser();
-        setUser(updatedUser);
+        console.log("Updating...")
+        await updateUser(setUser);
         Alert.alert("Video Bookmarked!");
 
       } else if (value=="delete") {
