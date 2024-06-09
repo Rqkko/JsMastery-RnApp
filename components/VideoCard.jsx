@@ -20,6 +20,7 @@ const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, a
 
   async function handleMenuSelect(value) {
     try {
+      const x = [1,2,3,4]
       if (value=="bookmark") {
         if (!isBookmarked) {
           await bookmark(user, $id);
@@ -30,8 +31,9 @@ const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, a
           const removedVideo = await unbookmark(user, $id);
           await updateUser(setUser);
           setIsBookmarked(false);
-          // TODO: Make this work VV
+
           Alert.alert(`${removedVideo.title} is now unbookmarked!`);
+          
           if (isBookmarkPage) {
             refetch();
           }
