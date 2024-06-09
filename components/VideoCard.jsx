@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { icons } from '../constants'
 import WebView from 'react-native-webview';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
-import { bookmark, getCurrentUser, updateUser } from '../lib/appwrite';
+import { bookmark, getCurrentUser, unbookmark, updateUser } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
 
 const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, avatar }, usersBookmarked } }) => {
@@ -22,13 +22,15 @@ const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, a
     try {
       if (value=="bookmark") {
         if (!isBookmarked) {
-          await bookmark($id, title);
+          await bookmark(user, $id);
           await updateUser(setUser);
           setIsBookmarked(true);
           Alert.alert("Video Bookmarked!");
         } else {
-          // TODO: Make unbookmarking
-          Alert.alert("Unbookmarking");
+          const removedVideo = await unbookmark(user, $id);
+          await updateUser(setUser);
+          setIsBookmarked(false);
+          Alert.alert(`${removedVideo.title} is now unbookmarked!`);
         }
 
       } else if (value=="delete") {
