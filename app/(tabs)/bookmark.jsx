@@ -36,6 +36,8 @@ const Bookmark = () => {
           renderItem={({ item }) => (
             <VideoCard 
               vid = {item}
+              isBookmarkPage
+              refetch= {refetch}
             /> 
           )}
           ListEmptyComponent={() => (

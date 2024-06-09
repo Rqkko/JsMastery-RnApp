@@ -6,7 +6,7 @@ import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-m
 import { bookmark, getCurrentUser, unbookmark, updateUser } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
 
-const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, avatar }, usersBookmarked } }) => {
+const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, avatar }, usersBookmarked }, isBookmarkPage, refetch }) => {
   const [play, setPlay] = useState(false);
   const { user, setUser } = useGlobalContext();
   const [isBookmarked, setIsBookmarked] = useState(false)
@@ -30,7 +30,11 @@ const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, a
           const removedVideo = await unbookmark(user, $id);
           await updateUser(setUser);
           setIsBookmarked(false);
+          // TODO: Make this work VV
           Alert.alert(`${removedVideo.title} is now unbookmarked!`);
+          if (isBookmarkPage) {
+            refetch();
+          }
         }
 
       } else if (value=="delete") {
