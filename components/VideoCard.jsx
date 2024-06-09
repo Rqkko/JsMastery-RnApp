@@ -12,7 +12,6 @@ const VideoCard = ({ vid: { $id, title, thumbnail, video, creator: { username, a
   const [isBookmarked, setIsBookmarked] = useState(false)
 
   useEffect(() => {
-    console.log(usersBookmarked);
     if (user.bookmarkedVideos.some(video => video.$id === $id)) {
       setIsBookmarked(true);
     }
