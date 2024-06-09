@@ -9,16 +9,6 @@
 					"label": ""
 				}
 			]
-		},
-		{
-			"path": "lib/appwrite.js",
-			"bookmarks": [
-				{
-					"line": 282,
-					"column": 0,
-					"label": ""
-				}
-			]
 		}
 	]
 }
